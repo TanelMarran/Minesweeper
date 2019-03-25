@@ -11,6 +11,7 @@ public class Miiniväli {
         this.read = read;
         this.veerud = veerud;
         this.miinid_arv = miinid_arv;
+        setMiinid_arv(miinid_arv);
     }
 
     public int getRead() {
