@@ -2,7 +2,7 @@
 OOP aine projekt - Minesweeper.
 
 Projekti tööülesanded:
-1. Luua klass Miinivali (isendimuutujatega read, veerud, pommide_arv), mis sisaldab maatriksit, kus 'O' täihtsab tühja ruutu ning 'X' tähtistab pommiga ruutu.
+1. Luua klass Miiniväli (isendimuutujatega read, veerud, pommide_arv), mis sisaldab maatriksit, kus 'O' täihtsab tühja ruutu ning 'X' tähtistab pommiga ruutu.
    Võiks omada funktsionaalsusi:
     1) Täidab maatriksi ettenähtud pommide arvuga.
     2) Lubab üksikult ruute muuta kas pommideks või tühjadeks ruutudeks.
