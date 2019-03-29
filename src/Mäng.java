@@ -5,6 +5,8 @@ public class Mäng {
     private int käikude_arv = -1; //-1 tähendab, et käike on lõpmatult
     private Miiniväli mänguväli;
     private String[][] mängujärg;
+    private int arvatud_miinide_arv = 0;
+    private int märgistatud_miinide_arv = 0;
 
     public Mäng(Miiniväli mänguväli) {
         this.mänguväli = mänguväli;
@@ -31,7 +33,7 @@ public class Mäng {
         this.mänguväli = mänguväli;
     }
 
-    private void mängijaValib(String ruut) {
+    private int mängijaValib(String ruut) {
         boolean märgista = (ruut.charAt(0) == 'f');
         if (märgista) {
             ruut = ruut.substring(1);
@@ -41,13 +43,13 @@ public class Mäng {
         int xcoord = Integer.parseInt(ruudu_pos[1])-1;
         int ycoord = Integer.parseInt(ruudu_pos[0])-1;
         if (märgista) {
-            märgistaRuut(new int[]{xcoord,ycoord});
+            return (märgistaRuut(new int[]{xcoord,ycoord}) ? 1 : 0);
         } else {
-            uuriRuutu(new int[]{xcoord,ycoord});
+            return (uuriRuutu(new int[]{xcoord,ycoord}) ? -1 : 0);
         }
     }
 
-    private int uuriRuutu(int[] ruut) {
+    private boolean uuriRuutu(int[] ruut) {
         int xcoord = ruut[0];
         int ycoord = ruut[1];
         if(xcoord >= 0 && xcoord < mängujärg.length && ycoord >= 0 && ycoord < mängujärg[0].length && mängujärg[xcoord][ycoord].equals("?")) {
@@ -63,15 +65,37 @@ public class Mäng {
                 uuriRuutu(new int[]{xcoord-1,ycoord+1});
                 uuriRuutu(new int[]{xcoord+1,ycoord-1});
             }
-            return tulemus;
+            return (tulemus == -1);
         }
-        return -2;
+        return false;
     }
 
-    private void märgistaRuut(int[] ruut) {
-        int rida = ruut[0];
-        int veerg = ruut[1];
-        mängujärg[rida][veerg] = "f";
+    private boolean märgistaRuut(int[] ruut) {
+        int xcoord = ruut[0];
+        int ycoord = ruut[1];
+        if ((mängujärg[xcoord][ycoord].equals("f") || mängujärg[xcoord][ycoord].equals("?"))) {
+            boolean õigevalitu = false;
+            if (mänguväli.getMiinid()[xcoord][ycoord] == -1) {
+                õigevalitu = true;
+            }
+            if (mängujärg[xcoord][ycoord].equals("f")) {
+                if (õigevalitu) {
+                    arvatud_miinide_arv--;
+                }
+                mängujärg[xcoord][ycoord] = "?";
+                märgistatud_miinide_arv--;
+            } else  if (märgistatud_miinide_arv < mänguväli.getMiinid_arv()){
+                if (õigevalitu) {
+                    arvatud_miinide_arv++;
+                }
+                mängujärg[xcoord][ycoord] = "f";
+                märgistatud_miinide_arv++;
+            }
+        }
+        if (arvatud_miinide_arv == mänguväli.getMiinid_arv()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -97,24 +121,35 @@ public class Mäng {
     }
 
     public void mängi() {
+        arvatud_miinide_arv = 0;
+        märgistatud_miinide_arv = 0;
+        int võidetud = 0;
         mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
         for (String[] i : mängujärg) {
             for (int j = 0; j < mängujärg[0].length; j++) {
                 i[j] = "?";
             }
         }
-        while(true) {
+        while (võidetud == 0) {
             System.out.println(toString());
             String sisestatakse = JOptionPane.showInputDialog("Sisestage x ja y kordinaat kujul 'x,y': ");
-            mängijaValib(sisestatakse);
+            võidetud = mängijaValib(sisestatakse);
         }
-        //return false;
+        System.out.println(toString());
+        switch (võidetud) {
+            case -1:
+                System.out.println("Oled kaotaja!");
+                break;
+            case 1:
+                System.out.println("Oled võitja!");
+                break;
+        }
     }
 }
 
 class test {
     public static void main(String[] args) {
-        Miiniväli m = new Miiniväli(16,16,10);
+        Miiniväli m = new Miiniväli(8,8,3);
         Mäng mäng = new Mäng(m);
         mäng.mängi();
     }
