@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Arrays;
 
 public class Mäng {
@@ -37,30 +38,34 @@ public class Mäng {
         }
         String[] ruudu_pos = ruut.split(",");
         System.out.println(Arrays.toString(ruudu_pos));
-        int rida = Integer.parseInt(ruudu_pos[1]);
-        int veerg = Integer.parseInt(ruudu_pos[0]);
+        int xcoord = Integer.parseInt(ruudu_pos[1])-1;
+        int ycoord = Integer.parseInt(ruudu_pos[0])-1;
         if (märgista) {
-            märgistaRuut(new int[]{rida,veerg});
+            märgistaRuut(new int[]{xcoord,ycoord});
         } else {
-            uuriRuutu(new int[]{rida,veerg});
+            uuriRuutu(new int[]{xcoord,ycoord});
         }
     }
 
-    private String uuriRuutu(int[] ruut) {
-        int rida = ruut[0];
-        int veerg = ruut[1];
-        if(rida >= 0 && rida < mängujärg.length && veerg >= 0 && veerg < mängujärg[0].length && mängujärg[rida][veerg].equals("?")) {
-            String tulemus = mänguväli.getBommid()[rida][veerg];
-            mängujärg[rida][veerg] = tulemus;
-            if (tulemus.equals("0")) {
-                uuriRuutu(new int[]{rida+1,veerg});
-                uuriRuutu(new int[]{rida-1,veerg});
-                uuriRuutu(new int[]{rida,veerg+1});
-                uuriRuutu(new int[]{rida,veerg-1});
+    private int uuriRuutu(int[] ruut) {
+        int xcoord = ruut[0];
+        int ycoord = ruut[1];
+        if(xcoord >= 0 && xcoord < mängujärg.length && ycoord >= 0 && ycoord < mängujärg[0].length && mängujärg[xcoord][ycoord].equals("?")) {
+            int tulemus = mänguväli.getMiinid()[xcoord][ycoord];
+            mängujärg[xcoord][ycoord] = Integer.toString(tulemus);
+            if (tulemus == 0) {
+                uuriRuutu(new int[]{xcoord+1,ycoord});
+                uuriRuutu(new int[]{xcoord-1,ycoord});
+                uuriRuutu(new int[]{xcoord,ycoord+1});
+                uuriRuutu(new int[]{xcoord,ycoord-1});
+                uuriRuutu(new int[]{xcoord+1,ycoord+1});
+                uuriRuutu(new int[]{xcoord-1,ycoord-1});
+                uuriRuutu(new int[]{xcoord-1,ycoord+1});
+                uuriRuutu(new int[]{xcoord+1,ycoord-1});
             }
             return tulemus;
         }
-        return "-2";
+        return -2;
     }
 
     private void märgistaRuut(int[] ruut) {
@@ -80,29 +85,36 @@ public class Mäng {
         for(int i = 0; i < mänguväli.getRead(); i++) {
             ret.append(String.format("%3d.",i+1));
             for(int j = 0; j < mänguväli.getVeerud(); j++) {
-                ret.append(String.format("%4s",mängujärg[i][j]));
+                String väärtus = mängujärg[i][j];
+                if (mängujärg[i][j].equals("0")) {
+                    väärtus = ".";
+                }
+                ret.append(String.format("%4s",väärtus));
             }
             ret.append("\n");
         }
         return ret.toString();
     }
 
-    public boolean mängi() {
+    public void mängi() {
         mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
-        for(String[] i : mängujärg) {
-            for(int j = 0; j < mängujärg[0].length; j++) {
+        for (String[] i : mängujärg) {
+            for (int j = 0; j < mängujärg[0].length; j++) {
                 i[j] = "?";
             }
         }
-        mängijaValib("2,5");
-        System.out.println(toString());
-        return false;
+        while(true) {
+            System.out.println(toString());
+            String sisestatakse = JOptionPane.showInputDialog("Sisestage x ja y kordinaat kujul 'x,y': ");
+            mängijaValib(sisestatakse);
+        }
+        //return false;
     }
 }
 
 class test {
     public static void main(String[] args) {
-        Miiniväli m = new Miiniväli(7,11,20);
+        Miiniväli m = new Miiniväli(16,16,10);
         Mäng mäng = new Mäng(m);
         mäng.mängi();
     }
