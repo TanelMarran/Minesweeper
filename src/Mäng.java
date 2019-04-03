@@ -8,11 +8,19 @@ public class Mäng {
     private int arvatud_miinide_arv = 0;
     private int märgistatud_miinide_arv = 0;
 
+    // konstruktor Mäng
+    // Sisend: miiniväli
+    // Eesmärk: luua piiramatu arvu käikudega mäng
+
     public Mäng(Miiniväli mänguväli) {
         this.mänguväli = mänguväli;
     }
 
-    public Mäng(int käikude_arv, Miiniväli mänguväli) {
+    // konstruktor Mäng (hetkel implementeerimata)
+    // Sisend: miiniväli ja käikude arv
+    // Eesmärk: luua etteantud käikude arvu käikudega mäng
+
+    public Mäng(Miiniväli mänguväli, int käikude_arv) {
         this.käikude_arv = käikude_arv;
         this.mänguväli = mänguväli;
     }
@@ -33,6 +41,11 @@ public class Mäng {
         this.mänguväli = mänguväli;
     }
 
+    // meetod mängijaValib(String ruut)
+    // Sisend: kasutaja tekstisisend
+    // Väljund: X- ja Y-koordinaadid
+    // Eesmärk: sõltuvalt sisendist antud koordinaatidega ruut märgistada või seda uurida
+
     private int mängijaValib(String ruut) {
         boolean märgista = (ruut.charAt(0) == 'f');
         if (märgista) {
@@ -48,6 +61,13 @@ public class Mäng {
             return (uuriRuutu(new int[]{xcoord,ycoord}) ? -1 : 0);
         }
     }
+
+    // meetod uuriRuutu(int[] ruut)
+    // Sisend: X- ja Y-koordinaadid
+    // Väljund: mängu jätkumise staatus:
+    //          false, kui mäng jätkub (st, ei kaotatud),
+    //          true, kui mäng ei jätku (st, kaotati)
+    // Eesmärk: miini olemasolu antud ruudul mäng lõpetada, selle puudumisel uurida ruudu ümbrust
 
     private boolean uuriRuutu(int[] ruut) {
         int xcoord = ruut[0];
@@ -69,6 +89,13 @@ public class Mäng {
         }
         return false;
     }
+
+    // meetod märgistaRuut(int[] ruut)
+    // Sisend: X- ja Y-koordinaadid
+    // Väljund: mängu jätkumise staatus:
+    //          false, kui mäng jätkub (st, ei võidetud),
+    //          true, kui mäng ei jätku (st, võideti)
+    // Eesmärk: märgistada etteantud ruut, ning õigete märgistuste korral lõpetada mäng
 
     private boolean märgistaRuut(int[] ruut) {
         int xcoord = ruut[0];
@@ -120,6 +147,11 @@ public class Mäng {
         return ret.toString();
     }
 
+    // meetod mängi()
+    // Sisend: puudub
+    // Väljund: puudub
+    // Eesmärk: mängu teostav meetod, mis küsib sisendit kuni mängu lõpuni
+
     public void mängi() {
         arvatud_miinide_arv = 0;
         märgistatud_miinide_arv = 0;
@@ -132,7 +164,7 @@ public class Mäng {
         }
         while (võidetud == 0) {
             System.out.println(toString());
-            String sisestatakse = JOptionPane.showInputDialog("Sisestage x ja y kordinaat kujul 'x,y': ");
+            String sisestatakse = JOptionPane.showInputDialog("Pakkumiseks sisestage x ja y koordinaadid kujul 'x,y'    Lipuga märkimiseks sisestage koordinaadid kujul 'fx, y'");
             võidetud = mängijaValib(sisestatakse);
         }
         System.out.println(toString());

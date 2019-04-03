@@ -7,6 +7,10 @@ public class Miiniväli {
     private int miinid_arv;
     private int[][] miinid;
 
+    // konstruktor Miiniväli
+    // Sisend: ridade, veergude ja miinide arv
+    // Eesmärk: luua etteantud näitajatega miiniväli
+
     public Miiniväli(int read, int veerud, int miinid_arv) {
         this.read = read;
         this.veerud = veerud;
@@ -29,6 +33,12 @@ public class Miiniväli {
     int[][] getMiinid() {
         return miinid;
     }
+
+    // meetod setMiinid_arv(int miinid)
+    // Sisend: miinide arv
+    // Väljund: puudub
+    // Eesmärk: genereerida etteantud arv juhuslikus asukohas miine,
+    //          nende asukohas salvestada ning ümbritsevate ruutude loendurit suurendada
 
     void setMiinid_arv(int miinid) {
         double valjade_arv = veerud*read;
@@ -59,6 +69,11 @@ public class Miiniväli {
         }
         miinid_arv = miinid;
     }
+
+    // meetod määraOht(int veerg, int rida)
+    // Sisend: X- ja Y-koordinaat
+    // Väljund: puudub
+    // Eesmärk: suurendada etteantud ruudu loendurit ühe võrra
 
     private void määraOht(int veerg, int rida) {
         if(rida >= 0 && rida < miinid[0].length && veerg >= 0 && veerg < miinid.length && miinid[veerg][rida] != -1) {
