@@ -44,6 +44,8 @@ public class Miiniväli {
         double valjade_arv = veerud*read;
         int juhuarv;
         Set<Integer> valitud_valjad = new HashSet<>();
+        
+        //genereeri juhuslikud miinide asukohad
         while (valitud_valjad.size() != miinid) {
             juhuarv = (int) (Math.floor(Math.random() * valjade_arv));
             valitud_valjad.add(juhuarv);
@@ -54,6 +56,8 @@ public class Miiniväli {
                 this.miinid[i][j] = 0;
             }
         }
+
+        //muuda miini all olevat väärtust ja suurenda ümbritsevate ruutude loendurit ühe võrra
         for(Integer jarv : valitud_valjad) {
             int veerg = (jarv-(jarv % veerud))/veerud;
             int rida = jarv % veerud;
@@ -82,6 +86,7 @@ public class Miiniväli {
         }
     }
 
+    //platsi kuvamine
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();

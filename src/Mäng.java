@@ -43,8 +43,8 @@ public class Mäng {
 
     // meetod mängijaValib(String ruut)
     // Sisend: kasutaja tekstisisend
-    // Väljund: X- ja Y-koordinaadid
-    // Eesmärk: sõltuvalt sisendist antud koordinaatidega ruut märgistada või seda uurida
+    // Väljund: mängu võiduväärtus (-1, 0, või 1)
+    // Eesmärk: sõltuvalt sisendist antud koordinaatidega ruut märgistada või seda uurida ning tagastada mängu seis
 
     private int mängijaValib(String ruut) {
         boolean märgista = (ruut.charAt(0) == 'f');
@@ -55,6 +55,8 @@ public class Mäng {
         System.out.println(Arrays.toString(ruudu_pos));
         int xcoord = Integer.parseInt(ruudu_pos[1])-1;
         int ycoord = Integer.parseInt(ruudu_pos[0])-1;
+
+        //käivitada vastavalt sisendile kas märgistaRuut või uuriRuutu, tagastada mängu seis
         if (märgista) {
             return (märgistaRuut(new int[]{xcoord,ycoord}) ? 1 : 0);
         } else {
@@ -72,9 +74,13 @@ public class Mäng {
     private boolean uuriRuutu(int[] ruut) {
         int xcoord = ruut[0];
         int ycoord = ruut[1];
+
+        //käivita edasine juhul, kui pakkumine asub platsil ja on veel avamata
         if(xcoord >= 0 && xcoord < mängujärg.length && ycoord >= 0 && ycoord < mängujärg[0].length && mängujärg[xcoord][ycoord].equals("?")) {
             int tulemus = mänguväli.getMiinid()[xcoord][ycoord];
             mängujärg[xcoord][ycoord] = Integer.toString(tulemus);
+            
+            //kui ruut oli tühi, uurida ka kõrvalolevaid (platsi avamine)
             if (tulemus == 0) {
                 uuriRuutu(new int[]{xcoord+1,ycoord});
                 uuriRuutu(new int[]{xcoord-1,ycoord});
@@ -85,6 +91,8 @@ public class Mäng {
                 uuriRuutu(new int[]{xcoord-1,ycoord+1});
                 uuriRuutu(new int[]{xcoord+1,ycoord-1});
             }
+
+            //tagasta tõene, kui ruudu all on miin
             return (tulemus == -1);
         }
         return false;
@@ -100,6 +108,8 @@ public class Mäng {
     private boolean märgistaRuut(int[] ruut) {
         int xcoord = ruut[0];
         int ycoord = ruut[1];
+
+        //lipu lisamine või selle eemaldamine
         if ((mängujärg[xcoord][ycoord].equals("f") || mängujärg[xcoord][ycoord].equals("?"))) {
             boolean õigevalitu = false;
             if (mänguväli.getMiinid()[xcoord][ycoord] == -1) {
@@ -119,12 +129,15 @@ public class Mäng {
                 märgistatud_miinide_arv++;
             }
         }
+
+        //kui kõik miinid on märgitud, tagasta true
         if (arvatud_miinide_arv == mänguväli.getMiinid_arv()) {
             return true;
         }
         return false;
     }
 
+    //platsi kuvamine
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
@@ -157,17 +170,23 @@ public class Mäng {
         märgistatud_miinide_arv = 0;
         int võidetud = 0;
         mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
+
+        //kuva tühi plats
         for (String[] i : mängujärg) {
             for (int j = 0; j < mängujärg[0].length; j++) {
                 i[j] = "?";
             }
         }
+
+        //kuni mäng käib, küsi sisendit
         while (võidetud == 0) {
             System.out.println(toString());
             String sisestatakse = JOptionPane.showInputDialog("Pakkumiseks sisestage x ja y koordinaadid kujul 'x,y'    Lipuga märkimiseks sisestage koordinaadid kujul 'fx, y'");
             võidetud = mängijaValib(sisestatakse);
         }
         System.out.println(toString());
+
+        //väljasta lõpptulemus
         switch (võidetud) {
             case -1:
                 System.out.println("Oled kaotaja!");
