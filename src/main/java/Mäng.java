@@ -25,6 +25,10 @@ public class Mäng {
         this.mänguväli = mänguväli;
     }
 
+    public String[][] getMängujärg() {
+        return mängujärg;
+    }
+
     public int getKäikude_arv() {
         return käikude_arv;
     }
@@ -164,6 +168,20 @@ public class Mäng {
     // Sisend: puudub
     // Väljund: puudub
     // Eesmärk: mängu teostav meetod, mis küsib sisendit kuni mängu lõpuni
+
+    public void taasalusta() {
+        arvatud_miinide_arv = 0;
+        märgistatud_miinide_arv = 0;
+        int võidetud = 0;
+        mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
+
+        //kuva tühi plats
+        for (String[] i : mängujärg) {
+            for (int j = 0; j < mängujärg[0].length; j++) {
+                i[j] = "?";
+            }
+        }
+    }
 
     public void mängi() {
         arvatud_miinide_arv = 0;
