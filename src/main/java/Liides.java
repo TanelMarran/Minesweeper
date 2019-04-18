@@ -24,7 +24,7 @@ public class Liides extends Application {
     public void start(Stage peaLava) throws Exception {
         mänguväli.setGridLinesVisible(true);
 
-        taasalusta();
+        taasalusta(true);
 
         juur.getChildren().addAll(mänguväli);
 
@@ -34,7 +34,19 @@ public class Liides extends Application {
         peaLava.show();
     }
 
-    private void taasalusta() {
+    private void taasalusta(boolean esimene) {
+        if(!esimene) {
+            for(int i = 0; i < read; i++) {
+                for (int j = 0; j < veerud; j++) {
+                    mänguväli.getChildren().remove(r_matrix.get(i).get(j));
+                }
+                r_matrix.get(i).clear();
+            }
+            read = (int)(Math.random()*10.0)+2;
+            veerud = (int)(Math.random()*10.0)+2;
+            miiniväli = new Miiniväli(read,veerud,9);
+            mäng = new Mäng(miiniväli);
+        }
         r_matrix.clear();
         mäng.taasalusta();
         for(int i = 0; i < read; i++) {
@@ -49,15 +61,13 @@ public class Liides extends Application {
                     mäng.setVõidetud(mäng.mängijaValib((finalJ+1) + "," + (finalI+1)));
                     uuendamänguväli();
                     if(mäng.getVõidetud() != 0) {
-                        miiniväli = new Miiniväli(read,veerud,9);
-                        mäng = new Mäng(miiniväli);
-                        juur.getChildren().removeAll();
-                        //taasalusta();
+                        taasalusta(false);
                     }
                 });
                 mänguväli.add(r_matrix.get(i).get(j),i,j);
             }
         }
+        uuendamänguväli();
     }
 
     private void uuendamänguväli() {
@@ -70,7 +80,7 @@ public class Liides extends Application {
                     r_matrix.get(i).get(j).setDisable(true);
                 } else {
                     r_matrix.get(i).get(j).setText(väärtus);
-                    r_matrix.get(i).get(j).setDisable(false);
+                    r_matrix.get(i).get(j).setDisable(true);
                 }
                 if (väärtus.equals("?")) {
                     r_matrix.get(i).get(j).setText("");
