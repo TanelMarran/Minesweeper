@@ -7,6 +7,15 @@ public class Mäng {
     private String[][] mängujärg;
     private int arvatud_miinide_arv = 0;
     private int märgistatud_miinide_arv = 0;
+    private int võidetud = 0;
+
+    public int getVõidetud() {
+        return võidetud;
+    }
+
+    public void setVõidetud(int võidetud) {
+        this.võidetud = võidetud;
+    }
 
     // konstruktor Mäng
     // Sisend: miiniväli
@@ -50,7 +59,7 @@ public class Mäng {
     // Väljund: mängu võiduväärtus (-1, 0, või 1)
     // Eesmärk: sõltuvalt sisendist antud koordinaatidega ruut märgistada või seda uurida ning tagastada mängu seis
 
-    private int mängijaValib(String ruut) {
+    public int mängijaValib(String ruut) {
         boolean märgista = (ruut.charAt(0) == 'f');
         if (märgista) {
             ruut = ruut.substring(1);
@@ -172,7 +181,7 @@ public class Mäng {
     public void taasalusta() {
         arvatud_miinide_arv = 0;
         märgistatud_miinide_arv = 0;
-        int võidetud = 0;
+        võidetud = 0;
         mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
 
         //kuva tühi plats
@@ -199,7 +208,7 @@ public class Mäng {
         //kuni mäng käib, küsi sisendit
         while (võidetud == 0) {
             System.out.println(toString());
-            String sisestatakse = JOptionPane.showInputDialog("Pakkumiseks sisestage x ja y koordinaadid kujul 'x,y'    Lipuga märkimiseks sisestage koordinaadid kujul 'fx, y'");
+            String sisestatakse = JOptionPane.showInputDialog("Pakkumiseks sisestage x ja y koordinaadid kujul 'x,y'    Lipuga märkimiseks sisestage koordinaadid kujul 'fx,y'");
             võidetud = mängijaValib(sisestatakse);
         }
         System.out.println(toString());
