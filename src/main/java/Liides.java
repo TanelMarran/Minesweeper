@@ -12,9 +12,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class Liides extends Application {
     private ArrayList<ArrayList<Button>> r_matrix = new ArrayList<>();
-    private int read = 5;
-    private int veerud = 5;
-    private Miiniväli miiniväli = new Miiniväli(read,veerud,3);
+    private int read = 10;
+    private int veerud = 10;
+    private Miiniväli miiniväli = new Miiniväli(read,veerud,9);
     private Mäng mäng = new Mäng(miiniväli);
 
     private Group juur = new Group();
@@ -48,6 +48,12 @@ public class Liides extends Application {
                 r_matrix.get(i).get(j).setOnMouseClicked(event -> {
                     mäng.setVõidetud(mäng.mängijaValib((finalJ+1) + "," + (finalI+1)));
                     uuendamänguväli();
+                    if(mäng.getVõidetud() != 0) {
+                        miiniväli = new Miiniväli(read,veerud,9);
+                        mäng = new Mäng(miiniväli);
+                        juur.getChildren().removeAll();
+                        //taasalusta();
+                    }
                 });
                 mänguväli.add(r_matrix.get(i).get(j),i,j);
             }
@@ -55,6 +61,7 @@ public class Liides extends Application {
     }
 
     private void uuendamänguväli() {
+        //System.out.println(mäng.toString());
         for(int i = 0; i < read; i++) {
             for(int j = 0; j < veerud;j++) {
                 String väärtus = mäng.getMängujärg()[i][j];
@@ -63,6 +70,7 @@ public class Liides extends Application {
                     r_matrix.get(i).get(j).setDisable(true);
                 } else {
                     r_matrix.get(i).get(j).setText(väärtus);
+                    r_matrix.get(i).get(j).setDisable(false);
                 }
                 if (väärtus.equals("?")) {
                     r_matrix.get(i).get(j).setText("");
