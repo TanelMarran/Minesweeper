@@ -1,17 +1,18 @@
+import com.sun.javafx.scene.control.IntegerField;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class Liides extends Application {
     private ArrayList<ArrayList<Button>> r_matrix = new ArrayList<>();
@@ -23,6 +24,7 @@ public class Liides extends Application {
 
     private Group juur = new Group();
     private Button lipp = new Button("Uuri");
+    private MenuButton failimenüü = new MenuButton("Mäng");
     private GridPane mänguväli = new GridPane();
 
     @Override
@@ -30,8 +32,33 @@ public class Liides extends Application {
         mänguväli.setGridLinesVisible(true);
 
         taasalusta(true);
-        juur.getChildren().addAll(mänguväli,lipp);
+        juur.getChildren().addAll(mänguväli,lipp,failimenüü);
 
+        MenuItem mb_uusmäng = new MenuItem("Uus Mäng");
+        MenuItem mb_salvesta = new MenuItem("Salvesta");
+        MenuItem mb_lae = new MenuItem("Lae");
+        failimenüü.getItems().addAll(mb_uusmäng, mb_salvesta, mb_lae);
+        mb_uusmäng.setOnAction(event -> {
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            TextField textField = new TextField();
+            TextField textField2 = new TextField();
+            for(TextField t : new TextField[]{textField,textField2}) {
+                t.textProperty().addListener(new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                        String newValue) {
+                        if (!newValue.matches("\\d*")) {
+                            t.setText(newValue.replaceAll("[^\\d]", ""));
+                        }
+                    }
+                });
+            }
+            VBox vBox = new VBox(2,textField,textField2);
+            Scene s1 = new Scene(new Group(vBox));
+            stage.setScene(s1);
+            stage.showAndWait();
+        });
 
         Scene scene = new Scene(juur);
         peaLava.setTitle("Minesweeper");
@@ -39,8 +66,11 @@ public class Liides extends Application {
         peaLava.show();
 
         mänguväli.setTranslateY(80);
+        failimenüü.setTranslateY(40);
         mänguväli.setAlignment(Pos.BOTTOM_CENTER);
-        lipp.setTranslateX((peaLava.getWidth()-lipp.getWidth())/2);
+        for(Control c : new Control[]{lipp,failimenüü}) {
+            c.setTranslateX((peaLava.getWidth()-c.getWidth())/2);
+        }
         lipp.setOnMouseClicked(event -> lipp_vajutatud());
     }
 
@@ -60,8 +90,6 @@ public class Liides extends Application {
                 }
                 r_matrix.get(i).clear();
             }
-            read = (int)(Math.random()*10.0)+2;
-            veerud = (int)(Math.random()*10.0)+2;
             miiniväli = new Miiniväli(read,veerud,9);
             mäng = new Mäng(miiniväli);
         }
