@@ -1,9 +1,12 @@
 import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -16,8 +19,10 @@ public class Liides extends Application {
     private int veerud = 10;
     private Miiniväli miiniväli = new Miiniväli(read,veerud,9);
     private Mäng mäng = new Mäng(miiniväli);
+    private boolean märgista_lipuga = false;
 
     private Group juur = new Group();
+    private Button lipp = new Button("Uuri");
     private GridPane mänguväli = new GridPane();
 
     @Override
@@ -25,15 +30,28 @@ public class Liides extends Application {
         mänguväli.setGridLinesVisible(true);
 
         taasalusta(true);
+        juur.getChildren().addAll(mänguväli,lipp);
 
-        juur.getChildren().addAll(mänguväli);
 
         Scene scene = new Scene(juur);
         peaLava.setTitle("Minesweeper");
         peaLava.setScene(scene);
         peaLava.show();
+
+        mänguväli.setTranslateY(80);
+        mänguväli.setAlignment(Pos.BOTTOM_CENTER);
+        lipp.setTranslateX((peaLava.getWidth()-lipp.getWidth())/2);
+        lipp.setOnMouseClicked(event -> lipp_vajutatud());
     }
 
+    private void lipp_vajutatud() {
+        märgista_lipuga = !märgista_lipuga;
+        if(märgista_lipuga) {
+            lipp.setText("Märgista");
+        } else {
+            lipp.setText("Uuri");
+        }
+    }
     private void taasalusta(boolean esimene) {
         if(!esimene) {
             for(int i = 0; i < read; i++) {
@@ -58,7 +76,11 @@ public class Liides extends Application {
                 int finalJ = j;
                 int finalI = i;
                 r_matrix.get(i).get(j).setOnMouseClicked(event -> {
-                    mäng.setVõidetud(mäng.mängijaValib((finalJ+1) + "," + (finalI+1)));
+                    if(märgista_lipuga) {
+                        mäng.setVõidetud(mäng.mängijaValib("f" + (finalJ + 1) + "," + (finalI + 1)));
+                    } else {
+                        mäng.setVõidetud(mäng.mängijaValib((finalJ + 1) + "," + (finalI + 1)));
+                    }
                     uuendamänguväli();
                     if(mäng.getVõidetud() != 0) {
                         taasalusta(false);
@@ -71,7 +93,6 @@ public class Liides extends Application {
     }
 
     private void uuendamänguväli() {
-        //System.out.println(mäng.toString());
         for(int i = 0; i < read; i++) {
             for(int j = 0; j < veerud;j++) {
                 String väärtus = mäng.getMängujärg()[i][j];
@@ -84,6 +105,9 @@ public class Liides extends Application {
                 }
                 if (väärtus.equals("?")) {
                     r_matrix.get(i).get(j).setText("");
+                    r_matrix.get(i).get(j).setDisable(false);
+                }
+                if (väärtus.equals("f")) {
                     r_matrix.get(i).get(j).setDisable(false);
                 }
             }
