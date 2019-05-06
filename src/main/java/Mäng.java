@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.function.ToIntFunction;
 
 public class Mäng {
     private int käikude_arv = -1; //-1 tähendab, et käike on lõpmatult (käikude arv minesweeperis on tegelikult mõtetud? pigem siis määrata aega)
@@ -33,8 +34,30 @@ public class Mäng {
         }
     }
 
-    public void laeMäng(File fail) throws IOException {
-        new DataInputStream(new FileInputStream("tere.txt")).
+    public void laeMäng(String fail) throws IOException {
+        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fail)))) {
+            String[] väärtused = bufferedReader.readLine().split(",");
+            mänguväli = new Miiniväli(Integer.parseInt(väärtused[0]),Integer.parseInt(väärtused[1]),Integer.parseInt(väärtused[2]));
+            arvatud_miinide_arv = Integer.parseInt(väärtused[3]);
+            märgistatud_miinide_arv = Integer.parseInt(väärtused[4]);
+            for(int i = 0; i < mänguväli.getRead(); i++) {
+                String rida = bufferedReader.readLine();
+                for(int j = 0; j < mänguväli.getVeerud(); j++) {
+                    if(rida.charAt(j) == '-') {
+                        mänguväli.getMiinid()[i][j] = -1;
+                    } else {
+                        mänguväli.getMiinid()[i][j] = Integer.parseInt(String.valueOf(rida.charAt(j)));
+                    }
+                }
+            }
+            mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
+            for(int i = 0; i < mänguväli.getRead(); i++) {
+                String rida = bufferedReader.readLine();
+                for(int j = 0; j < mänguväli.getVeerud(); j++) {
+                    mängujärg[i][j] = String.valueOf(rida.charAt(j));
+                }
+            }
+        }
     }
 
     public int getVõidetud() {
@@ -230,14 +253,14 @@ public class Mäng {
         //arvatud_miinide_arv = 0;
         //märgistatud_miinide_arv = 0;
         int võidetud = 0;
-        mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
+        //mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
 
-        //kuva tühi plats
+        /*/kuva tühi plats
         for (String[] i : mängujärg) {
             for (int j = 0; j < mängujärg[0].length; j++) {
                 i[j] = "?";
             }
-        }
+        }*/
 
         //kuni mäng käib, küsi sisendit
         while (võidetud == 0) {
@@ -264,7 +287,8 @@ class test {
         Miiniväli m = new Miiniväli(8,8,3);
         System.out.println(m.toString());
         Mäng mäng = new Mäng(m);
-        mäng.salvestaMäng("salvestus.txt");
+        mäng.laeMäng("salvestus.txt");
+        System.out.println(mäng.getMänguväli().toString());
         mäng.mängi();
     }
 }

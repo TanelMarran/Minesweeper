@@ -34,6 +34,10 @@ public class Miiniväli {
         return miinid;
     }
 
+    public void setMiinid(int[][] miinid) {
+        this.miinid = miinid;
+    }
+
     // meetod setMiinid_arv(int miinid)
     // Sisend: miinide arv
     // Väljund: puudub
@@ -109,7 +113,6 @@ public class Miiniväli {
 class T {
     public static void main(String[] args) {
         Miiniväli m = new Miiniväli(3,5,3);
-        m.setMiinid_arv(4);
         System.out.println(m.toString());
     }
 }
