@@ -1,13 +1,41 @@
 import javax.swing.*;
+import java.io.*;
 import java.util.Arrays;
 
 public class Mäng {
-    private int käikude_arv = -1; //-1 tähendab, et käike on lõpmatult
+    private int käikude_arv = -1; //-1 tähendab, et käike on lõpmatult (käikude arv minesweeperis on tegelikult mõtetud? pigem siis määrata aega)
     private Miiniväli mänguväli;
     private String[][] mängujärg;
     private int arvatud_miinide_arv = 0;
     private int märgistatud_miinide_arv = 0;
     private int võidetud = 0;
+
+    public void salvestaMäng(String nimi) throws IOException {
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(nimi))) {
+            int[] üksikandmed = new int[]{mänguväli.getRead(),mänguväli.getVeerud(),mänguväli.getMiinid_arv(),arvatud_miinide_arv,märgistatud_miinide_arv};
+            for(int arv : üksikandmed) {
+                bufferedWriter.write(Integer.toString(arv));
+                bufferedWriter.write(",");
+            }
+            bufferedWriter.newLine();
+            for(int i = 0; i < üksikandmed[0]; i++) {
+                for(int j = 0; j < üksikandmed[1]; j++) {
+                    bufferedWriter.write(Integer.toString(mänguväli.getMiinid()[i][j]).charAt(0));
+                }
+                bufferedWriter.newLine();
+            }
+            for(int i = 0; i < üksikandmed[0]; i++) {
+                for(int j = 0; j < üksikandmed[1]; j++) {
+                    bufferedWriter.write(mängujärg[i][j]);
+                }
+                bufferedWriter.newLine();
+            }
+        }
+    }
+
+    public void laeMäng(File fail) throws IOException {
+        new DataInputStream(new FileInputStream("tere.txt")).
+    }
 
     public int getVõidetud() {
         return võidetud;
@@ -23,6 +51,12 @@ public class Mäng {
 
     public Mäng(Miiniväli mänguväli) {
         this.mänguväli = mänguväli;
+        mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
+        for (String[] i : mängujärg) {
+            for (int j = 0; j < mängujärg[0].length; j++) {
+                i[j] = "?";
+            }
+        }
     }
 
     // konstruktor Mäng (hetkel implementeerimata)
@@ -193,8 +227,8 @@ public class Mäng {
     }
 
     public void mängi() {
-        arvatud_miinide_arv = 0;
-        märgistatud_miinide_arv = 0;
+        //arvatud_miinide_arv = 0;
+        //märgistatud_miinide_arv = 0;
         int võidetud = 0;
         mängujärg = new String[mänguväli.getRead()][mänguväli.getVeerud()];
 
@@ -226,9 +260,11 @@ public class Mäng {
 }
 
 class test {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Miiniväli m = new Miiniväli(8,8,3);
+        System.out.println(m.toString());
         Mäng mäng = new Mäng(m);
+        mäng.salvestaMäng("salvestus.txt");
         mäng.mängi();
     }
 }

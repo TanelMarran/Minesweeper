@@ -67,7 +67,6 @@ public class Liides extends Application {
 
         mänguväli.setTranslateY(80);
         failimenüü.setTranslateY(40);
-        mänguväli.setAlignment(Pos.BOTTOM_CENTER);
         for(Control c : new Control[]{lipp,failimenüü}) {
             c.setTranslateX((peaLava.getWidth()-c.getWidth())/2);
         }
