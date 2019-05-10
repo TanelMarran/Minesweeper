@@ -41,95 +41,113 @@ public class Liides extends Application {
 
 
         MenuItem mb_uusmäng = new MenuItem("Uus Mäng");
-        mb_uusmäng.setOnAction(event -> {
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            TextField readT = new TextField();
-            TextField veerudT = new TextField();
-            TextField miinide_arvT = new TextField();
-            VBox hBox = new VBox(new Text("Read: "),readT);
-            VBox hBox1 = new VBox(new Text("Veerud: "),veerudT);
-            VBox hBox2 = new VBox(new Text("Miinide arv: "),miinide_arvT);
-            for(TextField t : new TextField[]{readT,veerudT,miinide_arvT}) {
-                t.textProperty().addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                        String newValue) {
-                        if (!newValue.matches("\\d*")) {
-                            t.setText(newValue.replaceAll("[^\\d]", ""));
-                        }
-                    }
-                });
-            }
-            Button button = new Button("Alsuta");
-            button.setOnMouseClicked(event1 -> {
-                stage.close();
-                tühjenda();
-                read = Integer.parseInt(readT.getText());
-                veerud = Integer.parseInt(veerudT.getText());
-                miinide_arv = Math.min(Integer.parseInt(miinide_arvT.getText()),read*veerud-1);
-                taasalusta();
-            });
-
-            VBox vBox = new VBox(2,hBox,hBox1,hBox2,button);
-            Scene s1 = new Scene(new Group(vBox));
-            stage.setScene(s1);
-            stage.showAndWait();
-        });
+        mb_uusmäng.setOnAction(event -> uusMängAken());
 
         MenuItem mb_salvesta = new MenuItem("Salvesta");
-        mb_salvesta.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Valige sobilik .txt fail");
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-            fileChooser.getExtensionFilters().add(extFilter);
-            String nimi = fileChooser.showSaveDialog(peaLava).getAbsolutePath();
-
-            if (!nimi.equals("")) {
-                try {
-                    mäng.salvestaMäng(nimi);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        mb_salvesta.setOnAction(event -> salvestaMäng());
 
         MenuItem mb_lae = new MenuItem("Lae");
-        mb_lae.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Valige sobilik .txt fail");
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-            fileChooser.getExtensionFilters().add(extFilter);
-            String nimi = fileChooser.showOpenDialog(peaLava).getAbsolutePath();
-
-            if (!nimi.equals("")) {
-                try {
-                    tühjenda();
-                    mäng.laeMäng(nimi);
-                    taasalusta();
-                    mäng.laeMäng(nimi);
-                    uuendamänguväli();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        mb_lae.setOnAction(event -> laeMäng());
 
 
         failimenüü.getItems().addAll(mb_uusmäng, mb_salvesta, mb_lae);
         peaLava.setTitle("Minesweeper");
         peaLava.setScene(scene);
         peaLava.show();
-        System.out.println(mänguväli.getHgap());
-        peaLava.setWidth(mänguväli.getWidth()+15.2);
-        peaLava.setHeight(mänguväli.getHeight()+80+39.2);
+        uuendaAknaSuurus();
 
         mänguväli.setTranslateY(80);
         failimenüü.setTranslateY(40);
+        lipp.setOnMouseClicked(event -> lipp_vajutatud());
+    }
+
+    private void uuendaAknaSuurus() {
+        peaLava.setWidth(mänguväli.getColumnCount()*30+15.2);
+        peaLava.setHeight(mänguväli.getRowCount()*30+80+39.2);
         for(Control c : new Control[]{lipp,failimenüü}) {
             c.setTranslateX((peaLava.getWidth()-c.getWidth())/2);
         }
-        lipp.setOnMouseClicked(event -> lipp_vajutatud());
+    }
+
+    private void uusMängAken() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        TextField readT = new TextField();
+        TextField veerudT = new TextField();
+        TextField miinide_arvT = new TextField();
+        VBox hBox = new VBox(new Text("Read: "),readT);
+        VBox hBox1 = new VBox(new Text("Veerud: "),veerudT);
+        VBox hBox2 = new VBox(new Text("Miinide arv: "),miinide_arvT);
+        for(TextField t : new TextField[]{readT,veerudT,miinide_arvT}) {
+            t.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                    String newValue) {
+                    if (!newValue.matches("\\d*")) {
+                        t.setText(newValue.replaceAll("[^\\d]", ""));
+                    }
+                }
+            });
+        }
+        Button button = new Button("Alusta");
+        button.setOnMouseClicked(event1 -> {
+            stage.close();
+            tühjenda();
+            read = Integer.parseInt(readT.getText());
+            veerud = Integer.parseInt(veerudT.getText());
+            miinide_arv = Math.min(Integer.parseInt(miinide_arvT.getText()),read*veerud-1);
+            taasalusta();
+        });
+
+        VBox vBox = new VBox(2,hBox,hBox1,hBox2,button);
+        Scene s1 = new Scene(new Group(vBox));
+        stage.setScene(s1);
+        stage.showAndWait();
+    }
+
+    private void salvestaMäng() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Valige sobilik .txt fail");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        String nimi = "";
+        try {
+            nimi = fileChooser.showSaveDialog(peaLava).getAbsolutePath();
+        } catch (NullPointerException ignored) {}
+
+        if (!nimi.equals("")) {
+            try {
+                mäng.salvestaMäng(nimi);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void laeMäng() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Valige sobilik .txt fail");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        String nimi = "";
+        try {
+            nimi = fileChooser.showOpenDialog(peaLava).getAbsolutePath();
+        } catch (NullPointerException ignored) {}
+
+        if (!nimi.equals("")) {
+            try {
+                tühjenda();
+                mäng.laeMäng(nimi);
+                read = mäng.getMänguväli().getRead();
+                veerud = mäng.getMänguväli().getVeerud();
+                miinide_arv = mäng.getMänguväli().getMiinid_arv();
+                taasalusta();
+                mäng.laeMäng(nimi);
+                uuendamänguväli();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void lipp_vajutatud() {
@@ -145,7 +163,6 @@ public class Liides extends Application {
             for (int j = 0; j < veerud; j++) {
                 mänguväli.getChildren().remove(r_matrix.get(i).get(j));
             }
-            //r_matrix.get(i).clear();
         }
         r_matrix = new ArrayList<>();
     }
@@ -200,6 +217,7 @@ public class Liides extends Application {
                 }
             }
         }
+        uuendaAknaSuurus();
     }
 
 }
