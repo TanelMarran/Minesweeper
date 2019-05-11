@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -34,6 +35,34 @@ public class Liides extends Application {
     public void start(Stage peaLava) throws Exception {
         mänguväli.setGridLinesVisible(true);
         this.peaLava = peaLava;
+        Scene scene = tiitel();
+        peaLava.setTitle("Minesweeper");
+        peaLava.setScene(scene);
+        peaLava.show();
+    }
+
+    private Scene tiitel() {
+        Text tervitus = new Text("Tere tulemast Minesweeperisse!");
+        tervitus.setX(100);
+
+        Text selgitus = new Text("Mängu eesmärk on märgistada kõik ruudustikus olevad miinid. Miine saab tuvastada nende ümberolevate ruutude loenduriga - loendur ütleb, mitu miini on ruudustiku ümberolevas 8 ruudus. Edu!");
+        selgitus.setWrappingWidth(100+200);
+        selgitus.setX(50);
+        selgitus.setY(25);
+
+        Button alusta = new Button("Alusta");
+        alusta.setTranslateY(100);
+        alusta.setTranslateX(150);
+        alusta.setOnMousePressed(event -> aktiveeriMänguAken());
+
+        Group group = new Group();
+        group.setTranslateY(10);
+        group.getChildren().addAll(tervitus,selgitus,alusta);
+        Scene scene = new Scene(group);
+        return scene;
+    }
+
+    private void aktiveeriMänguAken() {
         Scene scene = new Scene(juur);
 
         taasalusta();
