@@ -215,15 +215,43 @@ public class Liides extends Application {
                         mäng.setVõidetud(mäng.mängijaValib((finalJ + 1) + "," + (finalI + 1)));
                     }
                     uuendamänguväli();
-                    if(mäng.getVõidetud() != 0) {
-                        tühjenda();
-                        taasalusta();
+                    switch(mäng.getVõidetud()) {
+                        case 1:
+                            võitja();
+                            break;
+                        case -1:
+                            kaotaja();
+                            break;
                     }
                 });
                 mänguväli.add(r_matrix.get(i).get(j),i,j);
             }
         }
         uuendamänguväli();
+    }
+
+    private void võitja() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Button button = new Button("Võitja!");
+        button.setOnMouseClicked(event -> stage.close());
+        Scene s1 = new Scene(button);
+        stage.setScene(s1);
+        stage.showAndWait();
+        tühjenda();
+        taasalusta();
+    }
+
+    private void kaotaja() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        Button button = new Button("Kaotaja!");
+        button.setOnMouseClicked(event -> stage.close());
+        Scene s1 = new Scene(button);
+        stage.setScene(s1);
+        stage.showAndWait();
+        tühjenda();
+        taasalusta();
     }
 
     private void uuendamänguväli() {
