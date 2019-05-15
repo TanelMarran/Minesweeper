@@ -107,6 +107,10 @@ public class Mäng {
         return mänguväli;
     }
 
+    public int getMärgistatud_miinide_arv() {
+        return märgistatud_miinide_arv;
+    }
+
     public void setMänguväli(Miiniväli mänguväli) {
         this.mänguväli = mänguväli;
     }

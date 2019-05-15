@@ -26,6 +26,7 @@ public class Liides extends Application {
     private boolean märgista_lipuga = false;
 
     private Group juur = new Group();
+    private Text lippe = new Text("Märgistatud väljasid: " + mäng.getMärgistatud_miinide_arv() + "/" + miinide_arv);
     private Button lipp = new Button("Uuri");
     private MenuButton failimenüü = new MenuButton("Mäng");
     private GridPane mänguväli = new GridPane();
@@ -65,8 +66,8 @@ public class Liides extends Application {
     private void aktiveeriMänguAken() {
         Scene scene = new Scene(juur);
 
-        taasalusta();
-        juur.getChildren().addAll(mänguväli,lipp,failimenüü);
+
+        juur.getChildren().addAll(mänguväli, lippe, lipp, failimenüü);
 
 
         MenuItem mb_uusmäng = new MenuItem("Uus Mäng");
@@ -83,19 +84,25 @@ public class Liides extends Application {
         peaLava.setTitle("Minesweeper");
         peaLava.setScene(scene);
         peaLava.show();
-        uuendaAknaSuurus();
 
-        mänguväli.setTranslateY(80);
-        failimenüü.setTranslateY(40);
+        lippe.setTranslateY(20);
+        lipp.setTranslateY(40);
+        mänguväli.setTranslateY(120);
+        failimenüü.setTranslateY(80);
         lipp.setOnMouseClicked(event -> lipp_vajutatud());
+
+        taasalusta();
+        uuendaAknaSuurus();
     }
 
     private void uuendaAknaSuurus() {
         peaLava.setWidth(mänguväli.getColumnCount()*30+15.2);
-        peaLava.setHeight(mänguväli.getRowCount()*30+80+39.2);
+        peaLava.setHeight(mänguväli.getRowCount() * 30 + 120 + 39.2);
         for(Control c : new Control[]{lipp,failimenüü}) {
             c.setTranslateX((peaLava.getWidth()-c.getWidth())/2);
         }
+        lippe.setTranslateX((peaLava.getWidth() - lippe.getLayoutBounds().getWidth()) / 2);
+        mänguväli.setTranslateX(7.6);
     }
 
     private void uusMängAken() {
@@ -200,6 +207,7 @@ public class Liides extends Application {
         miiniväli = new Miiniväli(read,veerud,miinide_arv);
         mäng = new Mäng(miiniväli);
         mäng.taasalusta();
+        lippe.setText("Märgistatud väljasid: " + mäng.getMärgistatud_miinide_arv() + "/" + miinide_arv);
         for(int i = 0; i < read; i++) {
             r_matrix.add(new ArrayList<>());
             for(int j = 0; j < veerud;j++) {
@@ -211,6 +219,7 @@ public class Liides extends Application {
                 r_matrix.get(i).get(j).setOnMouseClicked(event -> {
                     if(märgista_lipuga) {
                         mäng.setVõidetud(mäng.mängijaValib("f" + (finalJ + 1) + "," + (finalI + 1)));
+                        lippe.setText("Märgistatud väljasid: " + mäng.getMärgistatud_miinide_arv() + "/" + miinide_arv);
                     } else {
                         mäng.setVõidetud(mäng.mängijaValib((finalJ + 1) + "," + (finalI + 1)));
                     }
@@ -270,7 +279,11 @@ public class Liides extends Application {
                     r_matrix.get(i).get(j).setDisable(false);
                 }
                 if (väärtus.equals("f")) {
+                    r_matrix.get(i).get(j).setText("\u2690");
                     r_matrix.get(i).get(j).setDisable(false);
+                }
+                if (väärtus.equals("-1")) {
+                    r_matrix.get(i).get(j).setText("\uD83D\uDCA5");
                 }
             }
         }
