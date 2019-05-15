@@ -96,8 +96,8 @@ public class Liides extends Application {
     }
 
     private void uuendaAknaSuurus() {
-        peaLava.setWidth(mänguväli.getColumnCount()*30+15.2);
-        peaLava.setHeight(mänguväli.getRowCount() * 30 + 120 + 39.2);
+        peaLava.setWidth(mänguväli.getColumnCount()*30.5+15.2+7.6*1.8);
+        peaLava.setHeight(mänguväli.getRowCount() * 30 + 120 + 39.2 + 7.6*1.6);
         for(Control c : new Control[]{lipp,failimenüü}) {
             c.setTranslateX((peaLava.getWidth()-c.getWidth())/2);
         }
@@ -184,9 +184,11 @@ public class Liides extends Application {
                 e.printStackTrace();
             }
         }
+        lippe.setText("Märgistatud väljasid: " + mäng.getMärgistatud_miinide_arv() + "/" + miinide_arv);
     }
 
     private void lipp_vajutatud() {
+        uuendaAknaSuurus();
         märgista_lipuga = !märgista_lipuga;
         if(märgista_lipuga) {
             lipp.setText("Märgista");
